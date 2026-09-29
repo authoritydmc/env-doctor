@@ -1,0 +1,27 @@
+{
+  "name": "env-doctor",
+  "version": "0.1.0",
+  "description": "Environment configuration doctor, schema validator, and secret leak auditor",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "env-doctor": "bin/env-doctor.js"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts src/cli.ts --format cjs,esm --dts",
+    "test": "node --test tests/*.test.js",
+    "lint": "biome check ."
+  },
+  "keywords": [
+    "env",
+    "dotenv",
+    "validation",
+    "security",
+    "secrets",
+    "audit",
+    "cli"
+  ],
+  "author": "authoritydmc",
+  "license": "MIT"
+}
