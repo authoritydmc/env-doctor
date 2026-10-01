@@ -17,11 +17,25 @@ if (report.error) {
 
 if (report.valid) {
   console.log(`✅ All ${report.totalExpected} expected environment variables are properly configured!`);
+  if (report.envLeaks && report.envLeaks.length > 0) {
+    console.log(`\n⚠️  Notice: ${report.envLeaks.length} live secret/high-entropy values detected in your private .env (keep .env gitignored):`);
+    report.envLeaks.forEach(l => {
+      const detail = l.type === 'pattern' ? l.patternName : `high entropy: ${l.entropy}`;
+      console.log(`    🔑 ${l.key} (${detail}): ${l.maskedValue}`);
+    });
+  }
   process.exit(0);
 } else {
   console.error('❌ Environment configuration issues detected:\n');
+  if (report.exampleLeaks && report.exampleLeaks.length > 0) {
+    console.error(`  🚨 CRITICAL: Leaked secrets detected in .env.example (${report.exampleLeaks.length}):`);
+    report.exampleLeaks.forEach(l => {
+      const detail = l.type === 'pattern' ? l.patternName : `high entropy: ${l.entropy}`;
+      console.error(`    - ${l.key} (${detail}): ${l.maskedValue}`);
+    });
+  }
   if (report.missing.length > 0) {
-    console.error(`  Missing variables (${report.missing.length}):`);
+    console.error(`\n  Missing variables (${report.missing.length}):`);
     report.missing.forEach(k => console.error(`    - ${k}`));
   }
   if (report.empty.length > 0) {
@@ -34,3 +48,4 @@ if (report.valid) {
   }
   process.exit(1);
 }
+
